@@ -118,7 +118,7 @@ grestore
 \maketitle
 
 \begin{abstract}
-We propose a system to estimate head poses only using depth information in real-time. We first track the user‚Äôs nose, and sample an amount of 3D points around the nose. Then we use the point cloud to fit a plane by least square error method, the normal vector of the plane yields yaw and pitch angle of user‚Äôs head orientation. On the other hand, ellipse fitting using head contour can provide the rolling angles. We adopt a real-time depth estimation method by using cameras such as Microsoft Kinect Sensor. The simplicity of this acquisition device comes at the cost of high noises in the acquired data. Our system is not affected by the illumination conditions in environments since only depth information is required in our system. . We demonstrate that 3D head pose estimation can be achieved in real-time with noisy depth data and without the user calibration.
+We propose a system to estimate head poses only using depth information in real-time. We first track the user?ôs nose, and sample an amount of 3D points around the nose. Then we use the point cloud to fit a plane by least square error method, the normal vector of the plane yields yaw and pitch angle of user?ôs head orientation. On the other hand, ellipse fitting using head contour can provide the rolling angles. We adopt a real-time depth estimation method by using cameras such as Microsoft Kinect Sensor. The simplicity of this acquisition device comes at the cost of high noises in the acquired data. Our system is not affected by the illumination conditions in environments since only depth information is required in our system. . We demonstrate that 3D head pose estimation can be achieved in real-time with noisy depth data and without the user calibration.
 \keywords{Head Pose Estimation \and Depth Map \and Kinect \and Least Square Error Plane \and Calibration Free \and Nose Tracking}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
@@ -132,11 +132,11 @@ A successful interaction system should be robust and deliver responses to users 
 \caption{The threes degree of freedom of head poses: roll, pitch, yaw.}
 \label{fig:1}       % Give a unique label
 \end{figure}
-State-of-the-art methods of head pose estimation can roughly be divided into several categories according to the type of required data (i.e., color image or depth map). The early researches focused on the estimation in color images \cite{Ref15}. The color image-based algorithms can be further divided into two types, feature-based \cite{Ref1,Ref8,Ref10,Ref11,Ref18} and appearance-based \cite{Ref2,Ref4,Ref5,Ref6,Ref7,Ref17} methods. However, those methods relying on color image are sensitive to illumination, and the accuracy will be affected in weak/no light environments.
+State-of-the-art methods of head pose estimation can roughly be divided into several categories according to the type of required data (i.e., color image or depth map). The early researches focused on the estimation in color images \cite{Ref15}. The color image-based algorithms can be further divided into two types, feature-based \cite{Ref1,Ref8,Ref10,Ref11,Ref18} and appearance-based \cite{Ref2,Ref4,Ref5,Ref6,Ref7,Ref17} methods. Vatahska et al. \cite{Ref8} roughly classifies the pose into three different face orientation and then determine the head pose by the position of facial features. Yang et al. \cite{Ref1}  using vertical stereo camera to register face model, but it need to mark feature points at setup. Z. Li et al.\cite{Ref23}  using multi-class kernel to classify the face and pose estimation and it can achieved large rotation angle. Wu et al.\cite{Ref24}  proposed a two-stage approach to address the issue of data alignment and background noise when using subspace analysis. Storer et al.\cite{Ref8}  warp the input face to frontal and to estimate head pose by comparing the frontal and input face. Recently, Huang et al.\cite{Ref22}  can be easily robusti?ed to deal with image noise using supervised local subspace learning, but it is not suit for real-time application. However, those methods relying on color image are sensitive to illumination, and the accuracy will be affected in weak/no light environments.
 
-With the development of fast depth map generating systems such as \cite{Ref12}, many works are inspired to use depth data as additional information to improve color-image based algorithms \cite{Ref1,Ref14,Ref20}, and several recent works use depth data as their primary information \cite{Ref3,Ref9,Ref16,Ref19}. Breitenstein et al. \cite{Ref3} proposed a system which can estimate large rotation angles, but GPU-based implement is required to achieve real-time performance.   On the other hand, the state of the art works \cite{Ref16,Ref19} require training procedure before using the system. We believe that a system with low-complexity and training-free is practical for users.
+With the development of fast depth map generating systems such as \cite{Ref12}, many works are inspired to use depth data as additional information to improve color-image based algorithms \cite{Ref1,Ref14,Ref20,Ref21}, and several recent works use depth data as their primary information \cite{Ref3,Ref9,Ref16,Ref19}. Zhao et al.\cite{Ref22}to obtain 3D points by stereo camera and use these 3D points to estimate head pose, but these 3D points are less accuracy than which obtained by Kinect.Breitenstein et al. \cite{Ref3} proposed a system which can estimate large rotation angles, but GPU-based implement is required to achieve real-time performance.   On the other hand, the state of the art works \cite{Ref16,Ref19} require training procedure before using the system. We believe that a system with low-complexity and training-free is practical for users.
 
-Recently, Microsoft has released a device, Microsoft Xbox Kinect, which can simultaneously capture color images and their depth information at 30 fps (Fig.~\ref{fig:2}). Kinect uses structured infrared rays to estimate the depth information of the scene, but there are still some limitations. First, the acquired depth map is noisy, that is, the estimated depth values are not constant, and there are flickers in the depth map. The measured flickering rate of per pixel in a static object is about 1.4\% in average. The maximum flickering rate even exceeds 30\% on the edges of objects. Therefore, to adopt such a device, we have to address the noisy data. Secondly, there are many holes within the depth map containing no depth information due to occlusions or transparent materials blocking infrared rays from being received by Kinect. Thirdly, Kinect sensor can‚Äôt acquire accurate depth information while objects are too close or too far from camera.  1m~6.5m is an appropriate range for precise depth information. To achieve high accuracy and robustness in our system, we have to address these issues.
+Recently, Microsoft has released a device, Microsoft Xbox Kinect, which can simultaneously capture color images and their depth information at 30 fps (Fig.~\ref{fig:2}). Kinect uses structured infrared rays to estimate the depth information of the scene, but there are still some limitations. First, the acquired depth map is noisy, that is, the estimated depth values are not constant, and there are flickers in the depth map. The measured flickering rate of per pixel in a static object is about 1.4\% in average. The maximum flickering rate even exceeds 30\% on the edges of objects. Therefore, to adopt such a device, we have to address the noisy data. Secondly, there are many holes within the depth map containing no depth information due to occlusions or transparent materials blocking infrared rays from being received by Kinect. Thirdly, Kinect sensor can?ôt acquire accurate depth information while objects are too close or too far from camera.  1m~6.5m is an appropriate range for precise depth information. To achieve high accuracy and robustness in our system, we have to address these issues.
 
 \begin{figure*}
 \includegraphics[width=1.0\linewidth]{./fig3.png}
@@ -163,7 +163,7 @@ The rest of this paper is organized as follows. The overview of our system is in
 
 \section{System Overview}
 \label{sec:2}
-The overview of our system is illustrated in Fig.~\ref{fig:4}, and each square represents a procedure. The initial setting stage requires the subject to face directly to the camera. The processes of head pose estimation are divided into two parts, one for yaw and pitch (left part) angles and the other for roll (right part) angles. In the left part, the nose is located in the depth image using the proposed algorithm. Then several points around the nose are sampled, and we can find a plane to fit the sampled points by the least square method. The plane‚Äôs normal vector is used to represent the face orientation. In the right part, the head contour is detected by thresholding the depth values, and then an ellipse is used to fit the head contour. Both the left part and the right part will maintain a history table to preserve the temporal coherence. Finally, the output parameters can be used to control the virtual avatar in real-time.
+The overview of our system is illustrated in Fig.~\ref{fig:4}, and each square represents a procedure. The initial setting stage requires the subject to face directly to the camera. The processes of head pose estimation are divided into two parts, one for yaw and pitch (left part) angles and the other for roll (right part) angles. In the left part, the nose is located in the depth image using the proposed algorithm. Then several points around the nose are sampled, and we can find a plane to fit the sampled points by the least square method. The plane?ôs normal vector is used to represent the face orientation. In the right part, the head contour is detected by thresholding the depth values, and then an ellipse is used to fit the head contour. Both the left part and the right part will maintain a history table to preserve the temporal coherence. Finally, the output parameters can be used to control the virtual avatar in real-time.
 
 
 \section{Implementation}
@@ -195,14 +195,14 @@ By calculating the center position of the point cloud (See Eq.2), we can easily 
 
 \subsection{Rotation Estimation}
 \label{sec:3.3}
-We propose a novel algorithm for rotation estimation. The estimation can be divided into two parts: Ellipse fitting for roll angle; Least square error plane fitting for yaw and pitch angles. We use two steps in the fitting procedure. The first step is 2D ellipse fitting which is easier and faster. Although 3D fitting is also possible, the computation complexity is obviously higher and will reduce the performance.  The second step is 3D fitting around the nose area for detecting the ‚Äúsurface normal‚Äù of a face. This can be done efficiently since  the fitting is applied to a much smaller area.
+We propose a novel algorithm for rotation estimation. The estimation can be divided into two parts: Ellipse fitting for roll angle; Least square error plane fitting for yaw and pitch angles. We use two steps in the fitting procedure. The first step is 2D ellipse fitting which is easier and faster. Although 3D fitting is also possible, the computation complexity is obviously higher and will reduce the performance.  The second step is 3D fitting around the nose area for detecting the ?úsurface normal??of a face. This can be done efficiently since  the fitting is applied to a much smaller area.
 
 \paragraph{Roll Angle Estimation:}
-Since the roll angle is decided by fitting the head to an ellipse, the first step is to locate the contour of the head. A depth threshold value is used to filter the background pixels and the leftmost and the rightmost pixels in each row are regarded as the contour (See Fig.~\ref{fig:6}(a)). However, since the captured depth information through Kinect is quite noisy, the detected contour will vary with the time and cause the temporal incoherence problems. For example, the estimated roll angle is not stable, and the virtual avatar will be trembling all the time even there is no head motions. Therefore, we add a smoothness term to handle this issue. The smoothing process adjusts the coordinate of every head contour pixel by an ‚Äúaveraging filter‚Äù which is equal to a low-pass filter (Fig.~\ref{fig:6}(b)), using Eq.3 where $(x_{i},y_{i})$ indicates the i-th contour pixel, l means the length of averaging window, which is a constant.
+Since the roll angle is decided by fitting the head to an ellipse, the first step is to locate the contour of the head. A depth threshold value is used to filter the background pixels and the leftmost and the rightmost pixels in each row are regarded as the contour (See Fig.~\ref{fig:6}(a)). However, since the captured depth information through Kinect is quite noisy, the detected contour will vary with the time and cause the temporal incoherence problems. For example, the estimated roll angle is not stable, and the virtual avatar will be trembling all the time even there is no head motions. Therefore, we add a smoothness term to handle this issue. The smoothing process adjusts the coordinate of every head contour pixel by an ?úaveraging filter??which is equal to a low-pass filter (Fig.~\ref{fig:6}(b)), using Eq.3 where $(x_{i},y_{i})$ indicates the i-th contour pixel, l means the length of averaging window, which is a constant.
 
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig6.png}
-\caption{Detect the boundary of user‚Äôs head (a), and smooth the boundary by averaging neighboring points (b). Fit an ellipse that best matches the smoothed head boundary(c), and apply the angle of the result ellipse to the virtual avatar.}
+\caption{Detect the boundary of user?ôs head (a), and smooth the boundary by averaging neighboring points (b). Fit an ellipse that best matches the smoothed head boundary(c), and apply the angle of the result ellipse to the virtual avatar.}
 \label{fig:6}       % Give a unique label
 \end{figure}
 
@@ -212,15 +212,15 @@ Since the roll angle is decided by fitting the head to an ellipse, the first ste
 After the smoothing process, an ellipse is fitted to these contour points by least square error method (See Fig.~\ref{fig:6}(c)). Then we take the rotation angle of the fitted ellipse as the estimated roll angle. Fig.~\ref{fig:6}(d) shows the result.
 
 \paragraph{Pitch and Yaw Angles Estimation}
-To estimate yaw and pitch angles, a basic idea is that our faces can be roughly considered as a plane. The normal vector of this plane can represent the orientation of the actor‚Äôs face. Our goal is to reconstruct this plane. To achieve this goal, the least square error method is applied to fit a plane to the 3D point cloud. However, Kinect doesn‚Äôt provide the information that which of the 3D points belongs to the actor‚Äôs face and which doesn‚Äôt. Therefore, a face detection process must be applied first. In our work, we achieve this goal by tracking the user‚Äôs nose. Fig.~\ref{fig:7} shows the pipeline of this step.
+To estimate yaw and pitch angles, a basic idea is that our faces can be roughly considered as a plane. The normal vector of this plane can represent the orientation of the actor?ôs face. Our goal is to reconstruct this plane. To achieve this goal, the least square error method is applied to fit a plane to the 3D point cloud. However, Kinect doesn?ôt provide the information that which of the 3D points belongs to the actor?ôs face and which doesn?ôt. Therefore, a face detection process must be applied first. In our work, we achieve this goal by tracking the user?ôs nose. Fig.~\ref{fig:7} shows the pipeline of this step.
 
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig7.png}
-\caption{Detect and track user‚Äôs nose (a) and sample several points from the nose‚Äôs neighboring area (b) and apply least square error algorithm to fit a plane to the sample points(c).}
+\caption{Detect and track user?ôs nose (a) and sample several points from the nose?ôs neighboring area (b) and apply least square error algorithm to fit a plane to the sample points(c).}
 \label{fig:7}       % Give a unique label
 \end{figure}
 
-It is observed from experiments that human‚Äôs nose is the nearest part to the camera at most of the time, except when the user turns his head with extreme large angles. Therefore, we can locate the initial position of nose by finding the shallowest depth value among the point cloud. This assumption remains feasible in a limited range of rotation angles (See Fig.~\ref{fig:8}(a)). However, in some specific conditions, it might appear that other parts on our face keep a shallower value than our nose. For example, glasses or cheek will be the shallowest point when yaw angle surpasses about 20 degrees, and chin and fringe will be the shallowest point when pitch angle surpasses about 15 degrees (See Fig.~\ref{fig:8}(b)).
+It is observed from experiments that human?ôs nose is the nearest part to the camera at most of the time, except when the user turns his head with extreme large angles. Therefore, we can locate the initial position of nose by finding the shallowest depth value among the point cloud. This assumption remains feasible in a limited range of rotation angles (See Fig.~\ref{fig:8}(a)). However, in some specific conditions, it might appear that other parts on our face keep a shallower value than our nose. For example, glasses or cheek will be the shallowest point when yaw angle surpasses about 20 degrees, and chin and fringe will be the shallowest point when pitch angle surpasses about 15 degrees (See Fig.~\ref{fig:8}(b)).
 
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig8.png}
@@ -228,7 +228,7 @@ It is observed from experiments that human‚Äôs nose is the nearest part to the c
 \label{fig:8}       % Give a unique label
 \end{figure}
 
-This problem can be tackled by the following steps. Since a human‚Äôs head can only rotate a small range of angles within a short moment such as one thirtieth of a second, we can take advantage of the temporal coherence from previous iterations. The whole point cloud is inversely rotated by the previously estimated yaw and pitch angles so that the currently observed head would turn back to the normal pose.
+This problem can be tackled by the following steps. Since a human?ôs head can only rotate a small range of angles within a short moment such as one thirtieth of a second, we can take advantage of the temporal coherence from previous iterations. The whole point cloud is inversely rotated by the previously estimated yaw and pitch angles so that the currently observed head would turn back to the normal pose.
 
 After this transformation, the new point cloud with new coordinates represent a head that faces straight forward to the camera. Note that the camera stands for the origin of world coordinate. 
 
@@ -265,7 +265,7 @@ Even though the adjusted point cloud is not a perfect face 3D model, we can stil
 \label{fig:9}       % Give a unique label
 \end{figure}
 
-As mentioned earlier in this chapter, our faces around the nose area can roughly be considered as a plane. Thus the normal vector of this plane can represent the orientation of the actor‚Äôs face. Since our system has detected the user‚Äôs nose, we can simply consider the neighboring area of nose to be the face area. In this paper, we sample 300 points from the selected face area (Fig.~\ref{fig:10}), and fit a plane to these sample points by the least square error method. The normal vector of the fitted plane is considered to be the orientation of the face.
+As mentioned earlier in this chapter, our faces around the nose area can roughly be considered as a plane. Thus the normal vector of this plane can represent the orientation of the actor?ôs face. Since our system has detected the user?ôs nose, we can simply consider the neighboring area of nose to be the face area. In this paper, we sample 300 points from the selected face area (Fig.~\ref{fig:10}), and fit a plane to these sample points by the least square error method. The normal vector of the fitted plane is considered to be the orientation of the face.
 
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig10.png}
@@ -273,7 +273,7 @@ As mentioned earlier in this chapter, our faces around the nose area can roughly
 \label{fig:10}       % Give a unique label
 \end{figure}
 
-We show an algebraic solution to the least square approximation problem here. Let a plane‚Äôs linear equation be $Ax+By+C=z$. Eq.5 indicates that every point sampled from the point cloud is on the plane $Ax+By+C=z$. $(x_{i},y_{i},z_{i})$ is the 3D coordinate of a sample point, and $n$ denotes the number of sample points. 
+We show an algebraic solution to the least square approximation problem here. Let a plane?ôs linear equation be $Ax+By+C=z$. Eq.5 indicates that every point sampled from the point cloud is on the plane $Ax+By+C=z$. $(x_{i},y_{i},z_{i})$ is the 3D coordinate of a sample point, and $n$ denotes the number of sample points. 
 \begin{small}	%Ax=b
 \begin{equation}
 \begin{bmatrix}
@@ -373,7 +373,7 @@ We apply a simple trigonometric function to the normal vector in order to transf
 Although depth cameras such Kinect can provide depth information in real-time, the accompanying noise in the depth maps will cause the decrease of accuracy in estimation. Therefore, we have to address the problem of data flickering or missing in sequences of depth information. We apply a dynamic temporal filter similar to that of \cite{Ref19} to solve flickering problem. In addition to the smoothness in depth maps, a history table is maintained to record the estimated results in each frame. Therefore, we can ignore impossible transitions of head poses by tracking the table. For instance, 60 degrees of yaw angle comes right after 5 degrees of yaw angle. 
 \section{Results}
 \label{sec:4}
-Fig.~\ref{fig:12} shows the results from three users of which each makes ten arbitrary pose. The first and fourth columns show what pose users make. Note that our system doesn‚Äôt take any advantage from these color images so that it still performs well when the there is no lighting in the environment. The second and fifth columns are the depth maps captured by the 3D sensor. The third and sixth columns show visualizations of the results by using the output parameters to control virtual avatars. We implement our system on a PC with Intel CPU Q9500 (2.83 GHz) and NVIDIA 210 graphics display card, and can currently achieve 30 fps.
+Fig.~\ref{fig:12} shows the results from three users of which each makes ten arbitrary pose. The first and fourth columns show what pose users make. Note that our system doesn?ôt take any advantage from these color images so that it still performs well when the there is no lighting in the environment. The second and fifth columns are the depth maps captured by the 3D sensor. The third and sixth columns show visualizations of the results by using the output parameters to control virtual avatars. We implement our system on a PC with Intel CPU Q9500 (2.83 GHz) and NVIDIA 210 graphics display card, and can currently achieve 30 fps.
 
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig12a.png}
@@ -383,13 +383,13 @@ Fig.~\ref{fig:12} shows the results from three users of which each makes ten arb
 \label{fig:12}       % Give a unique label
 \end{figure}
 
-From the results, we observed that the estimated roll angle is quite robust by utilizing the proposed algorithm. In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial ‚Äúfront facing‚Äù position can be achieved. In our ‚Äúavatar control‚Äù application, this is already useful and enough, although we will try to extend the maximum angles to around $\pm 90^{\circ}$ in the future. Currently, the roll angle can reach already $\pm 70^{\circ}$. However, the estimation may fail for the yaw and pitch angles if we can‚Äôt successfully detect the nose which is the key feature used in the proposed algorithm. In this case, manual refocusing is possible. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
+From the results, we observed that the estimated roll angle is quite robust by utilizing the proposed algorithm. In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial ?úfront facing??position can be achieved. In our ?úavatar control??application, this is already useful and enough, although we will try to extend the maximum angles to around $\pm 90^{\circ}$ in the future. Currently, the roll angle can reach already $\pm 70^{\circ}$. However, the estimation may fail for the yaw and pitch angles if we can?ôt successfully detect the nose which is the key feature used in the proposed algorithm. In this case, manual refocusing is possible. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
 
 It is also observed from the experiments that the hair style may affect the estimation. Long hairs may interfere in the procedure of face boundaries detection and cause the decrease of accuracy in roll angle estimation (as shown in the left-bottom of Fig.~\ref{fig:13}). Fortunately, the estimation in yaw and pitch angles will not be affected by the hair style.
 
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig13.png}
-\caption{esults of female users are as accurate as male users in terms of yaw and pitch angles while long hair may affect the boundary detection and further decrease accuracy of roll angle estimation (left-bottom). The right-bottom picture shows that dramatic facial expression doesn‚Äôt affect the estimation.}
+\caption{esults of female users are as accurate as male users in terms of yaw and pitch angles while long hair may affect the boundary detection and further decrease accuracy of roll angle estimation (left-bottom). The right-bottom picture shows that dramatic facial expression doesn?ôt affect the estimation.}
 \label{fig:13}       % Give a unique label
 \end{figure}
 
@@ -397,7 +397,7 @@ It is also observed from the experiments that the hair style may affect the esti
 \label{sec:5}
 In this paper, we propose a real-time head pose estimation system that only requires the depth information. There are three key features in our system: 1) The estimation is based on the nose tracking and requires low computation cost. 2) Calibrations, training procedures, and registrations are not required. 3) Cheap and commercially available 3D sensors make our system easy to setup.
 
-In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial ‚Äúfront facing‚Äù position can be achieved. Currently, the roll angle can reach already $\pm 70^{\circ}$. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
+In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial ?úfront facing??position can be achieved. Currently, the roll angle can reach already $\pm 70^{\circ}$. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
 
 
 % For tables use
@@ -444,61 +444,74 @@ In a formal experiment, 14 people were tested. In general, for the maximum worki
 R. Yang, and Z. Zhang, Model-based head pose tracking with stereovision, Proceedings of IEEE International Conference on Automatic Face and Gesture Recognition, pp. 255-260, 2002.
 
 \bibitem{Ref2}
-L.-P. Morency, P. Sundberg, and T. Darrell, ‚ÄúPose estimation using 3d view-based eigenspaces, ‚Äù Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 45-52, 2003.
+L.-P. Morency, P. Sundberg, and T. Darrell, ?úPose estimation using 3d view-based eigenspaces, ??Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 45-52, 2003.
 
 \bibitem{Ref3}
-M. D. Breitenstein, D. Kuettel, T. Weise, L. Van Gool, and H. Pfister, ‚ÄúReal-time face pose estimation from single range images,‚Äù IEEE Conference on Computer Vision and Pattern Recognition, pp. 1-8, 2008.
+M. D. Breitenstein, D. Kuettel, T. Weise, L. Van Gool, and H. Pfister, ?úReal-time face pose estimation from single range images,??IEEE Conference on Computer Vision and Pattern Recognition, pp. 1-8, 2008.
 
 \bibitem{Ref4}
-V. N. Balasubramanian, J. Ye, and S. Panchanathan, ‚ÄúBiased manifold embedding: A framework for person-independent head pose estimation,‚Äù IEEE Conference on Computer Vision and Pattern Recognition, pp. 1-7,  2007.
+V. N. Balasubramanian, J. Ye, and S. Panchanathan, ?úBiased manifold embedding: A framework for person-independent head pose estimation,??IEEE Conference on Computer Vision and Pattern Recognition, pp. 1-7,  2007.
 
 \bibitem{Ref5}
-M. Osadchy, M. L. Miller, and Y. LeCun, ‚ÄúSynergistic face detection and pose estimation with energy-based models,‚Äù Journal of Machine Learning Research, Vol. 8, pp.1197 ‚Äì 1215, 2007
+M. Osadchy, M. L. Miller, and Y. LeCun, ?úSynergistic face detection and pose estimation with energy-based models,??Journal of Machine Learning Research, Vol. 8, pp.1197 ??1215, 2007
 
 \bibitem{Ref6}
-M. Storer, M. Urschler, and H. Bischof, ‚Äú3d-mam: 3d morphable appearance model for efficient fine head pose estimation from still images,‚Äù Proceedings of IEEE International Conference on Computer Vision,Workshop on Subspace Methods, pp. 192 ‚Äì 199, 2009.
+M. Storer, M. Urschler, and H. Bischof, ??d-mam: 3d morphable appearance model for efficient fine head pose estimation from still images,??Proceedings of IEEE International Conference on Computer Vision,Workshop on Subspace Methods, pp. 192 ??199, 2009.
 
 \bibitem{Ref7}
-M. Jones, and P. Viola, ‚ÄúFast multi-view face detection,‚Äù Technical Report TR2003-096, Mitsubishi Electric Research Laboratories, 2003.
+M. Jones, and P. Viola, ?úFast multi-view face detection,??Technical Report TR2003-096, Mitsubishi Electric Research Laboratories, 2003.
 
 \bibitem{Ref8}
-T. Vatahska, M. Bennewitz, and S. Behnke, ‚ÄúFeature-based head pose estimation from images,‚Äù Proceedings of IEEE-RAS International Conference on Humanoid Robots, pp. 330 - 335, 2007.
+T. Vatahska, M. Bennewitz, and S. Behnke, ?úFeature-based head pose estimation from images,??Proceedings of IEEE-RAS International Conference on Humanoid Robots, pp. 330 - 335, 2007.
 
 \bibitem{Ref9}
-S. Malassiotis, and M. G. Strintzis, ‚ÄúRobust real-time 3d head pose estimation from range data,‚Äù Pattern Recognition, vol.38, no. 8, pp.1153 ‚Äì 1165, 2005.
+S. Malassiotis, and M. G. Strintzis, ?úRobust real-time 3d head pose estimation from range data,??Pattern Recognition, vol.38, no. 8, pp.1153 ??1165, 2005.
 
 \bibitem{Ref10}
-Y. Matsumoto and A. Zelinsky, ‚ÄúAn algorithm for real-time stereo vision implementation of head pose and gaze direction measurement,‚Äù Proceedings of IEEE International Conference on  Automatic Face and Gesture Recognition, pp. 499 - 504, 2000.
+Y. Matsumoto and A. Zelinsky, ?úAn algorithm for real-time stereo vision implementation of head pose and gaze direction measurement,??Proceedings of IEEE International Conference on  Automatic Face and Gesture Recognition, pp. 499 - 504, 2000.
 
 \bibitem{Ref11}
-J. Yao, and W. K. Cham, ‚ÄúEfficient Model-Based Linear Head Motion Recovery from Movies,‚Äù Proceedings of IEEE Computer Society Conference on Computer Vision and Pattern Recognition, Vol. 2, pp. II-414-II-421,  2004.
+J. Yao, and W. K. Cham, ?úEfficient Model-Based Linear Head Motion Recovery from Movies,??Proceedings of IEEE Computer Society Conference on Computer Vision and Pattern Recognition, Vol. 2, pp. II-414-II-421,  2004.
 
 \bibitem{Ref12}
-T. Weise, B. Leibe, and L. Van Gool, ‚ÄúFast 3D Scanning with Automatic Motion Compensation,‚Äù Proceedings of IEEE Computer Society Conference on Computer Vision and Pattern Recognition, pp. 1-8, 2007.
+T. Weise, B. Leibe, and L. Van Gool, ?úFast 3D Scanning with Automatic Motion Compensation,??Proceedings of IEEE Computer Society Conference on Computer Vision and Pattern Recognition, pp. 1-8, 2007.
 
 \bibitem{Ref13}
-Q. Cai, D. Gallup, C. Zhang, and Z. Zhang, ‚Äú3D Deformable Face Tracking with A Commodity Depth camera,‚Äù European Conference on Computer Vision, pp. 229-242, 2010.
+Q. Cai, D. Gallup, C. Zhang, and Z. Zhang, ??D Deformable Face Tracking with A Commodity Depth camera,??European Conference on Computer Vision, pp. 229-242, 2010.
 
 \bibitem{Ref14}
-L.-P. Morency, P. Sundberg, and T. Darrell, ‚ÄúPose Estimation Using 3D View-Based Eigenspaces,‚Äù Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 45-52, 2003.
+L.-P. Morency, P. Sundberg, and T. Darrell, ?úPose Estimation Using 3D View-Based Eigenspaces,??Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 45-52, 2003.
 
 \bibitem{Ref15}
-E. Murphy-Chutorian, and M. Trivedi, ‚ÄúHead Pose Estimation in Computer Vision: A Survey,‚Äù IEEE Transactions Pattern Analysis and Machine Intelligence, Vol. 31, No. 4, pp. 607‚Äì626,  2009.
+E. Murphy-Chutorian, and M. Trivedi, ?úHead Pose Estimation in Computer Vision: A Survey,??IEEE Transactions Pattern Analysis and Machine Intelligence, Vol. 31, No. 4, pp. 607??26,  2009.
 
 \bibitem{Ref16}
-G. Fanelli, J. Gall, and L. V. Gool, ‚ÄúReal Time Head Pose Estimation with Random Regression Forests,‚Äù Proceedings of IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2011.
+G. Fanelli, J. Gall, and L. V. Gool, ?úReal Time Head Pose Estimation with Random Regression Forests,??Proceedings of IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2011.
 
 \bibitem{Ref17}
-L. Chen, L. Zhang, Y. Hu, M. Li, and H. Zhang, ‚ÄúHead Pose Estimation Using Fisher Manifold Learning,‚Äù Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 203-207, 2003.
+L. Chen, L. Zhang, Y. Hu, M. Li, and H. Zhang, ?úHead Pose Estimation Using Fisher Manifold Learning,??Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 203-207, 2003.
  
 \bibitem{Ref18}
-J. Whitehill, and J. R. Movellan, ‚ÄúA Discriminative Approach to Frame-by-Frame Head Pose Tracking,‚Äù Proceedings of the IEEE International Conference on Analysis and Modeling of Faces and Gestures, pp. 1-7, 2008.
+J. Whitehill, and J. R. Movellan, ?úA Discriminative Approach to Frame-by-Frame Head Pose Tracking,??Proceedings of the IEEE International Conference on Analysis and Modeling of Faces and Gestures, pp. 1-7, 2008.
 
 \bibitem{Ref19}
-T. Weise, S. Bouaziz, H. Li, and M. Pauly, ‚ÄúReal time Performance-Based Facial Animation,‚Äù ACM Transactions on Graphics, Proceedings of the 38th ACM SIGGRAPH Conference and Exhibition, 2011.
+T. Weise, S. Bouaziz, H. Li, and M. Pauly, ?úReal time Performance-Based Facial Animation,??ACM Transactions on Graphics, Proceedings of the 38th ACM SIGGRAPH Conference and Exhibition, 2011.
 
 \bibitem{Ref20}
-E. Seemann, K. Nickel, and R. Stiefelhagen, ‚ÄúHead Pose Estimation Using Stereo Vision for Human-Robot Interaction,‚Äù Proceedings of the IEEE International Conference on Analysis and Modeling of Faces and Gestures, pp. 626-631, 2004.
+E. Seemann, K. Nickel, and R. Stiefelhagen, ?úHead Pose Estimation Using Stereo Vision for Human-Robot Interaction,??Proceedings of the IEEE International Conference on Analysis and Modeling of Faces and Gestures, pp. 626-631, 2004.
+
+\bibitem{Ref21}
+G. Zhao, L. Chen, J. Song, G. Chen, °ßLarge Head Movement Tracking Using SIFT-Based Registration,°®  Proceedings of the 15th international conference on ACM Multimedia 2007
+
+\bibitem{Ref22}
+ D. Huang, M. Storer, F. De la Torre, H. Bischof, °ßSupervised Local Subspace Learning for Continuous Head Pose Estimation,°® IEEE Conference on Computer Vision and Pattern Recognition 2011
+
+\bibitem{Ref23}
+ S. Z. Li, Qi. Fu, L. Gu, B. Sch?lkopf, Y. Cheng, H. Zhang, °®Kernel machine based learning for multi-view face detection and pose estimation,°® Proceedings of Eighth IEEE International Conference on Computer Vision 2001
+
+\bibitem{Ref24}
+J. Wu and M. Trivedi, °ßA two-stage head pose estimation framework and evaluation,°® Pattern Recognition, 41(3):1138°V1158, 2008
+
 
 
 % Format for books
