@@ -132,9 +132,9 @@ A successful interaction system should be robust and provides real-time response
 \caption{The threes degree of freedom of head poses: roll, pitch, yaw.}
 \label{fig:1}       % Give a unique label
 \end{figure}
-State-of-the-art methods of head pose estimation can roughly be divided into several categories according to the type of required data (i.e., color image or depth map). The early researches focused on the estimation in color images \cite{Ref15}. The color image-based algorithms can be further divided into two types, feature-based \cite{Ref1,Ref8,Ref10,Ref11,Ref18} and appearance-based \cite{Ref2,Ref4,Ref5,Ref6,Ref7,Ref17} methods. However, those methods relying on color image are sensitive to illumination variations, and therefore the accuracy will be affected under weak or no light environment.
+State-of-the-art methods of head pose estimation can roughly be divided into several categories according to the type of required data (i.e., color image or depth map). The early researches focused on the estimation in color images \cite{Ref15}. The color image-based algorithms can be further divided into two types, feature-based \cite{Ref1,Ref8,Ref10,Ref11,Ref18} and appearance-based \cite{Ref2,Ref4,Ref5,Ref6,Ref7,Ref17} methods. Vatahska et al.[8] roughly classifies the pose into three different face orientation and then determine the head pose by the position of facial features. Yang et al \cite{Ref1} using vertical stereo camera to register face model, but it need to mark feature points at setup. Z. Li \cite{Ref23} using multi-class kernel to classify the face and pose estimation and it can achieved large rotation angle. Wu \cite{Ref25} proposed a two-stage approach to address the issue of data alignment and background noise when using subspace analysis. Storer \cite{Ref6} warp the input face to frontal and to estimate head pose by comparing the frontal and input face. Recently, Huang \cite{Ref23} can be easily robustiﬁed to deal with image noise using supervised local subspace learning, but it is not suit for real-time application. However, those methods relying on color image are sensitive to illumination variations, and therefore the accuracy will be affected under weak or no light environment.
 
-With the development of fast depth map generating systems such as \cite{Ref12}, many works are inspired to use depth data as additional information to improve color-image based algorithms \cite{Ref1,Ref14,Ref20}, and several recent works use depth data as their primary information \cite{Ref3,Ref9,Ref16,Ref19}. Breitenstein et al. \cite{Ref3} proposed a system which can estimate large rotation angles, but GPU-based implement is required to achieve real-time performance.   On the other hand, the state of the art works \cite{Ref16,Ref19} require training procedure before using the system. We believe that a system with low-complexity and training-free is practical for users.
+With the development of fast depth map generating systems such as \cite{Ref12}, many works are inspired to use depth data as additional information to improve color-image based algorithms \cite{Ref1,Ref14,Ref20}, and several recent works use depth data as their primary information \cite{Ref3,Ref9,Ref16,Ref19}. Zhao \cite{Ref22} to obtain 3D points by stereo camera and use these 3D points to estimate head pose, but these 3D points are less accuracy than which obtained by Kinect. Breitenstein et al. \cite{Ref3} proposed a system which can estimate large rotation angles, but GPU-based implement is required to achieve real-time performance.   On the other hand, the state of the art works \cite{Ref16,Ref19} require training procedure before using the system. We believe that a system with low-complexity and training-free is practical for users.
 
 Recently, Microsoft has released a device, Microsoft Xbox Kinect, which can simultaneously capture color images and their depth information at 30 fps (Fig.~\ref{fig:2}). Kinect uses structured infrared rays to estimate the depth information of the scene, but there are still some limitations. First, the acquired depth map is noisy, that is, the estimated depth values are not constant, and there are flickers in the depth map. The measured flickering rate of per pixel in a static object is about 1.4\% in average. The maximum flickering rate even exceeds 30\% on the edges of objects. Therefore, to adopt such a device, we have to address the noisy data. Secondly, there are many holes within the depth map containing no depth information due to occlusions or transparent materials blocking infrared rays from being received by Kinect. Thirdly, Kinect sensor can’t acquire accurate depth information while objects are too close or too far from camera.  1m~6.5m is an appropriate range for precise depth information. To achieve high accuracy and robustness in our system, we have to address these issues.
 
@@ -502,6 +502,18 @@ E. Seemann, K. Nickel, and R. Stiefelhagen, “Head Pose Estimation Using Stereo
 
 \bibitem{Ref21}
 Y. Tu, C. L. Zeng, C. H. Yei, S. Y. Huang, T. X. Cheng and M. Ouhyoung, “Head Pose Estimation Using Depth Map for Avatar Control,” The 24th IPPR Conference on Computer Vision, Graphics, and Image Processing, 2011. 
+
+\bibitem{Ref22}
+G. Zhao, L. Chen, J. Song, G. Chen, “Large Head Movement Tracking Using SIFT-Based Registration,”  Proceedings of the 15th international conference on ACM Multimedia 2007
+
+\bibitem{Ref23}
+D. Huang, M. Storer, F. De la Torre, H. Bischof, “Supervised Local Subspace Learning for Continuous Head Pose Estimation,” IEEE Conference on Computer Vision and Pattern Recognition 2010
+
+\bibitem{Ref24}
+S. Z. Li, Qi. Fu, L. Gu, B. Schölkopf, Y. Cheng, H. Zhang, ”Kernel machine based learning for multi-view face detection and pose estimation,” Proceedings of Eighth IEEE International Conference on Computer Vision 2001
+
+\bibitem{Ref25}
+J. Wu and M. Trivedi, “A two-stage head pose estimation framework and evaluation,” Pattern Recognition, 41(3):1138–1158, 2008
 
 % Format for books
 
