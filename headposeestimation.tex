@@ -1,3 +1,8 @@
+%% Paper Writing Log: %%
+% 2011/11/23 just seperate "introduction" into "Introduction" and "Related Work"
+%            and modified/add something to introduction, about to modify related work
+%
+
 %%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % This is a general template file for the LaTeX package SVJour3
@@ -12,12 +17,9 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% (git after reset)
 % First comes an example EPS file -- just ignore it and
 % proceed on the \documentclass line
 % your LaTeX will extract the file if required
-% tantofish
-% qqaa123 5rff Ya!!!!
 \begin{filecontents*}{example.eps}
 %!PS-Adobe-3.0 EPSF-3.0
 %%BoundingBox: 19 19 221 221
@@ -80,7 +82,6 @@ grestore
         Ming Ouhyoung
 }
 
-
 %\authorrunning{Short form of author list} % if too long for running head
 
 \institute{Yu Tu \at
@@ -125,15 +126,30 @@ We propose a system to estimate head poses only using depth information in real-
 % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
 
+\begin{figure}
+\includegraphics[width=1.0\linewidth]{./face1.png}
+\caption{Assuming that a head can be approximated by a bounding box, then the orientation of the box would be the pose of the head.}
+\label{fig:face}       % Give a unique label
+\end{figure}
+
+
 \section{Introduction}
-\label{sec:1}
-A successful interaction system should be robust and provides real-time responses to users. Head pose information is an important cue to know the gaze orientations, and we can use it to control an avatar. Generally, our head pose can be modeled by three parameters, roll, pitch and yaw in three dimensions (Fig.~\ref{fig:1}).
+\label{sec:Intro}
+A successful interaction system should be robust and provides real-time responses to users. Head pose information is a key element for analyzing human behavior. It can be used in human-computer interaction systems where the computer would need to know the human's movement. And it can also be used either in animations when artists want a virtual character to imitate a human actor's head movement, or in virtual reality systems for avatar control. Besides, systems like gaze orientation estimation, identification and facial expression recognition would benefit from head pose information, too. Generally, head pose can be modeled by three parameters, roll, pitch and yaw in three dimensions (Fig.~\ref{fig:PoseParameters}). Our goal is to robustly estimate these three parameters in real-time. 
+
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{./fig1.png}
 \caption{The threes degree of freedom of head poses: roll, pitch, yaw.}
-\label{fig:1}       % Give a unique label
+\label{fig:PoseParameters}       % Give a unique label
 \end{figure}
-State-of-the-art methods of head pose estimation can roughly be divided into several categories according to the type of required data (i.e., color image or depth map). The early researches focused on the estimation in color images \cite{Ref15}. The color image-based algorithms can be further divided into two types, feature-based \cite{Ref1,Ref8,Ref10,Ref11,Ref18} and appearance-based \cite{Ref2,Ref4,Ref5,Ref6,Ref7,Ref17} methods. Vatahska et al.[8] roughly classifies the pose into three different face orientation and then determine the head pose by the position of facial features. Yang et al \cite{Ref1} using vertical stereo camera to register face model which needs to mark feature points at start. Z. Li et al \cite{Ref23} using multi-class kernel to classify the face and pose estimation and it can achieved large rotation angle. Wu et al\cite{Ref25} proposed a two-stage approach to address the issue of data alignment and background noise when using subspace analysis. Storer et al \cite{Ref6} warp the input face to frontal and to estimate head pose by comparing the frontal and input face. Recently, Huang et al \cite{Ref23} can be easily robustified to deal with image noise using supervised local subspace learning, but it is not suit for real-time application. However, those methods relying on color image are sensitive to illumination variations, and therefore the accuracy will be affected under weak or no light environment.
+
+In this paper, we propose a novel and low computational complexity approach to estimate the head pose in real-time without resorting to the power of GPU. Assuming that a head can be approximated by a bounding box, then the orientation of the box would be the pose of the head. To acquire the orientation of this box, we propose to construct the frontal plane, considering the normal vector of the frontal plane can sufficiently represents the orientation of the bounding box. Knowing that lighting conditions cause severe impact on the detection of visual features in standard 2D images thus decreasing robustness, we would not use the 2D images as our input. Therefore, it is the depth map that we utilize as the only input in our system. Since the geometry feature of the nose is so salient that it can be easily detected on the depth map, we first locate the nose, and a Point cloud will be sampled around the nose for generating a least square error plane. Then the normal direction of the constructed plane shows the yaw and pitch angles of the face orientation. The calculated normal vector, however, contains no roll angle information. We show that the roll angle can be well estimated by calculating the best fitted ellipse of the head contour. Details of the proposed algorithm will be introduced in the following sections.
+
+The rest of this paper is organized as follows. A brief introduction to several great works related to this topic is in Sec.~\ref{sec:RelatedWork} The overview of our system is introduced in Sec.~\ref{sec:SysOverview}. The proposed algorithms will be elaborated in Sec.~\ref{sec:Implement}. Sec.~\ref{sec:Results} will show the experimental results. Conclusions and feature work are in Sec.~\ref{sec:Conclusion}.
+
+\section{Related Work}
+\label{sec:RelatedWork}
+There are many great works on head pose estimation, an the methods can be divided into several categories depending on the type of data required (i.e., 2D image or depth map). A comprehensive overview on methods required for 2D images is given by \cite{Ref_Survey}. The color image-based algorithms can be further divided into two types, feature-based \cite{Ref1,Ref8,Ref10,Ref11,Ref18} and appearance-based \cite{Ref2,Ref4,Ref5,Ref6,Ref7,Ref17} methods. Vatahska et al.[8] roughly classifies the pose into three different face orientation and then determine the head pose by the position of facial features. Yang et al \cite{Ref1} using vertical stereo camera to register face model which needs to mark feature points at start. Z. Li et al \cite{Ref23} using multi-class kernel to classify the face and pose estimation and it can achieved large rotation angle. Wu et al\cite{Ref25} proposed a two-stage approach to address the issue of data alignment and background noise when using subspace analysis. Storer et al \cite{Ref6} warp the input face to frontal and to estimate head pose by comparing the frontal and input face. Recently, Huang et al \cite{Ref23} can be easily robustified to deal with image noise using supervised local subspace learning, but it is not suit for real-time application. However, those methods relying on color image are sensitive to illumination variations, and therefore the accuracy will be affected under weak or no light environment.
 
 With the development of fast depth map generating systems such as \cite{Ref12}, many works are inspired to use depth data as additional information to improve color-image based algorithms \cite{Ref1,Ref14,Ref20}, and several recent works use depth data as their primary information \cite{Ref3,Ref9,Ref16,Ref19}. Zhao et al \cite{Ref22} obtained 3D points by stereo camera, but these 3D points are less accuracy than which obtained by Kinect. Breitenstein et al. \cite{Ref3} proposed a system which can estimate large rotation angles, but GPU-based implement is required to achieve real-time performance.   On the other hand, the state of the art works \cite{Ref16,Ref19} require training procedure before using the system. We believe that a system with low-complexity and training-free is practical for users.
 
@@ -157,22 +173,18 @@ Recently, Microsoft has released a device, Microsoft Xbox Kinect, which can simu
 \label{fig:4}       % Give a unique label
 \end{figure}
 
-In this paper, we propose an approach to estimate the head pose by first locating the nose position. Note that eye positions are hard to detect if without illumination, since the geometry features are not as salient as the nose. Assuming that a head can be approximated by a bounding box, and the orientation of the box is the pose of the head. Point cloud will be sampled around the nose for generating a least square error plane. Then the normal direction can represent the face orientation. To avoid the impact of lighting conditions, we locate the nose position using only depth information.  Therefore, the only information utilized to estimate head poses is the depth information in our system. The proposed algorithm will be introduced in the following sections.
-
-The rest of this paper is organized as follows. The overview of our system is introduced in Sec.~\ref{sec:2}. The proposed algorithms will be elaborated in Sec.~\ref{sec:3}. Sec.~\ref{sec:4} will show the experimental results. Conclusions and feature work are in Sec.~\ref{sec:5}.
-
 
 \section{System Overview}
-\label{sec:2}
+\label{sec:SysOverview}
 The overview of our system is illustrated in Fig.~\ref{fig:4}, and each box represents a procedure. The initial setting stage requires the subject to face directly to the camera. The processes of head pose estimation are divided into two parts, one for yaw and pitch (left part) angles and the other for roll (right part) angles. In the left part, the nose is located in the depth image using the proposed algorithm. Then several points around the nose are sampled, and we can find a plane to fit the sampled points by the least square method. The plane’s normal vector is used to represent the face orientation. In the right part, the head contour is detected by thresholding the depth values, and then an ellipse is used to fit the head contour. Both the left part and the right part will keep a history data copy to preserve the temporal coherence. Finally, the output parameters can be used to control the virtual avatar in real-time.
 
 
 \section{Implementation}
-\label{sec:3}
-In general, the head pose can be modeled by six parameters. Three of them are transition parameters respect to x-axis, y-axis and z-axis, and rest of them are rotation parameters - yaw, pitch and roll. Our goal is to estimate these six parameters precisely in real-time while preserving the temporal coherence.
+\label{sec:Implement}
+In general, the head pose can be modeled by six parameters. Three of them are translation parameters respect to x-axis, y-axis and z-axis, and rest of them are rotation parameters - yaw, pitch and roll. Our goal is to estimate these six parameters precisely in real-time while preserving the temporal coherence.
 
 \subsection{Preprocessing}
-\label{sec:3.1}
+\label{subsec:Preprocessing}
 The proposed algorithm uses Microsoft Kinect to capture the depth information. A depth map in VGA resolution is generated with pixel values ranging from 0 to 10,000 millimeters. The depth value can be regarded as the value on z coordinate, and we need to further obtain the values on x and y coordinates. A simple perspective projection model can be used to handle this issue (Fig.~\ref{fig:5}).
 
 \begin{figure}
@@ -185,17 +197,17 @@ Let the camera as the origin of the 3D world coordinate system and its view dire
 \begin{equation}
 p=(x,y,z)=(z\cdot \frac{X}{f}, z\cdot \frac{Y}{f}, z)
 \end{equation}
-Thus the following steps (Sec.~\ref{sec:3.2}, Sec.~\ref{sec:3.3}) can be applied on the 3D point cloud.
+Thus the following steps (Sec.~\ref{subsec:Translation}, Sec.~\ref{subsec:Rotation}) can be applied on the 3D point cloud.
 
-\subsection{Transition Estimation}
-\label{sec:3.2}
-By calculating the center position of the point cloud (See Eq.2), we can easily estimate transition parameters.
+\subsection{Translation Estimation}
+\label{subsec:Translation}
+By calculating the center position of the point cloud (See Eq.2), we can easily estimate translation parameters.
 \begin{equation}
 (t_{x},t_{y},t_{z})=\frac{\sum_{i=1}^n{(x_{i},y_{i},z_{i})}}{N}
 \end{equation}
 
 \subsection{Rotation Estimation}
-\label{sec:3.3}
+\label{subsec:Rotation}
 We propose a novel algorithm for rotation estimation. The estimation can be divided into two parts: Ellipse fitting for roll angle; Least square error plane fitting for yaw and pitch angles. We use two steps in the fitting procedure. The first step is 2D ellipse fitting which is easier and faster. Although 3D fitting is also possible, the computation complexity is obviously higher and will reduce the performance.  The second step is 3D fitting around the nose area for detecting the “surface normal” of a face. This can be done efficiently since  the fitting is applied to a much smaller area.
 
 \paragraph{Roll Angle Estimation:}
@@ -370,10 +382,10 @@ We apply a simple trigonometric function to the normal vector in order to transf
 \end{equation}
 
 \subsection{Flickering Problem}
-\label{sec:3.4}
-Although depth cameras such Kinect can provide depth information in real-time, the accompanying noise in the depth maps will cause the decrease of accuracy in estimation. Therefore, we have to address the problem of data flickering or missing in sequences of depth information. We apply a dynamic temporal filter similar to that of \cite{Ref19} to solve flickering problem. In addition to the smoothness in depth maps, a history table is maintained to record the estimated results in each frame. Therefore, we can ignore impossible transitions of head poses by tracking the table. For instance, 60 degrees of yaw angle comes right after 5 degrees of yaw angle. 
+\label{subsec:Flickering}
+Although depth cameras such Kinect can provide depth information in real-time, the accompanying noise in the depth maps will cause the decrease of accuracy in estimation. Therefore, we have to address the problem of data flickering or missing in sequences of depth information. We apply a dynamic temporal filter similar to that of \cite{Ref19} to solve flickering problem. In addition to the smoothness in depth maps, a history table is maintained to record the estimated results in each frame. Therefore, we can ignore impossible translations of head poses by tracking the table. For instance, 60 degrees of yaw angle comes right after 5 degrees of yaw angle. 
 \section{Results}
-\label{sec:4}
+\label{sec:Results}
 Fig.~\ref{fig:12} shows the results from three users of which each makes ten arbitrary poses. The first and fourth columns show what pose users make. Note that our system doesn’t take any advantage from these color images so that it still performs well when the there is no lighting in the environment. The second and fifth columns are the depth maps captured by the 3D sensor. The third and sixth columns show visualizations of the results by using the output parameters to control virtual avatars. We implement our system on a PC with Intel CPU Q9500 (2.83 GHz) and NVIDIA 210 graphics display card, and can currently achieve 30 fps.
 
 \begin{figure}
@@ -395,7 +407,7 @@ It is also observed from the experiments that the hair style may affect the esti
 \end{figure}
 
 \section{Conclusion and Future Work}
-\label{sec:5}
+\label{sec:Conclusion}
 In this paper, we propose a real-time head pose estimation system that only requires the depth information. There are three key features in our system: 1) The estimation is based on the nose tracking and requires low computation cost. 2) Calibrations, training procedures, and registrations are not required. 3) Cheap and commercially available 3D sensors make our system easy to setup.
 
 In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial “front facing” position can be achieved. Currently, the roll angle can reach already $\pm 70^{\circ}$. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
@@ -483,7 +495,7 @@ Q. Cai, D. Gallup, C. Zhang, and Z. Zhang, “3D Deformable Face Tracking with A
 \bibitem{Ref14}
 L.-P. Morency, P. Sundberg, and T. Darrell, “Pose Estimation Using 3D View-Based Eigenspaces,” Proceedings of the IEEE International Workshop on Analysis and Modeling of Faces and Gestures, pp. 45-52, 2003.
 
-\bibitem{Ref15}
+\bibitem{Ref_Survey}
 E. Murphy-Chutorian, and M. Trivedi, “Head Pose Estimation in Computer Vision: A Survey,” IEEE Transactions Pattern Analysis and Machine Intelligence, Vol. 31, No. 4, pp. 607–626,  2009.
 
 \bibitem{Ref16}
