@@ -143,7 +143,7 @@ A successful interaction system should be robust and provides real-time response
 \label{fig:PoseParameters}       % Give a unique label
 \end{figure}
 
-In this paper, we propose a novel and low computational complexity approach to estimate the head pose in real-time without resorting to the power of GPU. Assuming that a head can be approximated by a bounding box, then the orientation of the box would be the pose of the head. To acquire the orientation of this box, we propose to construct the frontal plane, considering the normal vector of the frontal plane can sufficiently represents the orientation of the bounding box. Knowing that lighting conditions cause severe impact on the detection of visual features in standard 2D images thus decreasing robustness, we would not use the 2D images as our input. Therefore, it is the depth map that we utilize as the only input in our system. Since the geometry feature of the nose is so salient that it can be easily detected on the depth map, we first locate the nose, and a Point cloud will be sampled around the nose for generating a least square error plane. Then the normal direction of the constructed plane shows the yaw and pitch angles of the face orientation. The calculated normal vector, however, contains no roll angle information. We show that the roll angle can be well estimated by calculating the best fitted ellipse of the head contour. Details of the proposed algorithm will be introduced in the following sections.
+In this paper, we propose a novel and  complexity approach to estimate the head pose in real-time without resorting to the power of GPU. Assuming that a head can be approximated by a bounding box, then the orientation of the box would be the pose of the head. To acquire the orientation of this box, we propose to construct the frontal plane, considering the normal vector of the frontal plane can sufficiently represents the orientation of the bounding box. Knowing that lighting conditions cause severe impact on the detection of visual features in standard 2D images thus decreasing robustness, we would not use the 2D images as our input. Therefore, it is the depth map that we utilize as the only input in our system. Since the geometry feature of the nose is so salient that it can be easily detected on the depth map, we first locate the nose, and a Point cloud will be sampled around the nose for generating a least square error plane. Then the normal direction of the constructed plane shows the yaw and pitch angles of the face orientation. The calculated normal vector, however, contains no roll angle information. We show that the roll angle can be well estimated by calculating the best fitted ellipse of the head contour. Details of the proposed algorithm will be introduced in the following sections.
 
 The rest of this paper is organized as follows. A brief introduction to several great works related to this topic is in Sec.~\ref{sec:RelatedWork} The overview of our system is introduced in Sec.~\ref{sec:SysOverview}. The proposed algorithms will be elaborated in Sec.~\ref{sec:Implement}. Sec.~\ref{sec:Results} will show the experimental results. Conclusions and feature work are in Sec.~\ref{sec:Conclusion}.
 
@@ -217,7 +217,7 @@ By calculating the center position of the point cloud (See Eq.2), we can easily 
 
 \subsection{Rotation Estimation}
 \label{subsec:Rotation}
-We propose a novel algorithm for rotation estimation. The estimation can be divided into two parts: Ellipse fitting for roll angle; Least square error plane fitting for yaw and pitch angles. We use two steps in the fitting procedure. The first step is 2D ellipse fitting which is easier and faster. Although 3D fitting is also possible, the computation complexity is obviously higher and will reduce the performance.  The second step is 3D fitting around the nose area for detecting the “surface normal” of a face. This can be done efficiently since  the fitting is applied to a much smaller area.
+We propose a novel algorithm for rotation estimation. The estimation can be divided into two parts: Ellipse fitting for roll angle; Least square error plane fitting for yaw and pitch angles. We use two steps in the fitting procedure. The first step is 2D ellipse fitting. From the fitted elippse we can get roll angle information. Although 3D ellipsoid fitting is also possible, the computation complexity is obviously higher and will decrease the performance.  The second step is 3D plane fitting around the nose area for detecting the “surface normal” of a face. This can be done efficiently since the fitting is applied to a much smaller area.
 
 \paragraph{Roll Angle Estimation:}
 Since the roll angle is decided by fitting the head to an ellipse, the first step is to locate the contour of the head. A depth threshold value is used to filter the background pixels and the leftmost and the rightmost pixels in each row are regarded as the contour (See Fig.~\ref{fig:6}(a)). However, since the captured depth information through Kinect is quite noisy, the detected contour will vary with the time and cause the temporal incoherence problems. For example, the estimated roll angle is not stable, and the virtual avatar will be trembling all the time even there is no head motions. Therefore, we add a smoothness term to handle this issue. The smoothing process adjusts the coordinate of every head contour pixel by an “averaging filter” which is equal to a low-pass filter (Fig.~\ref{fig:6}(b)), using Eq.3 where $(x_{i},y_{i})$ indicates the i-th contour pixel, l means the length of averaging window, which is a constant.
@@ -386,8 +386,8 @@ We then transform the normal vector $\vec{N}(A,B,-1)$ to yaw and pitch angles. F
 
 We apply a simple trigonometric function to the normal vector in order to transform $\vec{N}(A,B,-1)$ to $(\alpha,\beta )$ :
 \begin{equation}
-\alpha = \arccos{(\frac{1}{\sqrt{A^2+1^2}})},
-\beta  = \arccos{(\frac{1}{\sqrt{B^2+1^2}})}
+\alpha = \arctan{(B)},
+\beta  = \arctan{(A)}
 \end{equation}
 
 \subsection{Flickering Problem}
@@ -405,7 +405,7 @@ Fig.~\ref{fig:12} shows the results from three users of which each makes ten arb
 \label{fig:12}       % Give a unique label
 \end{figure}
 
-From the results, we observed that the estimated roll angle is quite robust by utilizing the proposed algorithm. In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial “front facing” position can be achieved. In our “avatar control” application, this is already useful and enough, although we will try to extend the maximum angles to around $\pm 90^{\circ}$ in the future. Currently, the roll angle can reach $\pm 70^{\circ}$. However, since the nose tip position is a key element in the proposed algorithm, the estimation on yaw and pitch angles may fail once the nose is not detect successfully. In this case, manual refocusing is possible. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
+In the experiments, we observed that the estimated roll angle is quite robust by utilizing the proposed algorithm. In a formal experiment, 14 people were tested. In general, our method succeeds in estimating the head pose within the range of $\pm 50^{\circ}$ yaw, $\pm 40^{\circ}$ pitch and $\pm 70^{\circ}$ roll rotations. Comparing to state-of-the-art methods, although our capibility on pitch and yaw angles estimating are not as good as them, it is worth mentioning that our estimation on roll angles outperforms them, e.g.\cite{Ref3,Ref16}. However, since the nose tip position is a key element in the proposed algorithm, the estimation on yaw and pitch angles may fail once the nose is not detect successfully. In this case, manual refocusing is required. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
 
 It is also observed from the experiments that the hair style may affect the estimation. Long hairs may interfere in the procedure of face boundaries detection and cause the decrease of accuracy in roll angle estimation (as shown in the left-bottom of Fig.~\ref{fig:13}). Fortunately, the estimation in yaw and pitch angles will not be affected by the hair style.
 
@@ -415,11 +415,14 @@ It is also observed from the experiments that the hair style may affect the esti
 \label{fig:13}       % Give a unique label
 \end{figure}
 
-\section{Conclusion and Future Work}
+\section{Conclusions}
 \label{sec:Conclusion}
-In this paper, we propose a real-time head pose estimation system that only requires the depth information. There are three key features in our system: 1) The estimation is based on the nose tracking and requires low computation cost. 2) Calibrations, training procedures, and registrations are not required. 3) Cheap and commercially available 3D sensors make our system easy to setup.
 
-In a formal experiment, 14 people were tested. In general, for the maximum working range angles, $\pm 45^{\circ}$ around the initial “front facing” position can be achieved. Currently, the roll angle can reach already $\pm 70^{\circ}$. In general case, where no hair fringe or hair blocking, the accuracy is around 100\%, and with hair blocking (especially female faces) the accuracy is 96\%.
+In this paper, we propose a robust head pose estimation system that can give real-time response to users without having to resort to the power of GPUs. Therefore, our approach is not limited to powerful devices, and has large potential to be applied in a wide variety of applications. Besides, since the approach only relies on the depth map which is not affected by illumination variations, the system can works in s wide variety of environments, e.g. indoor, outdoor, well-lit, dark night. Moreover, the proposed approach neither requires the user to do any training procedure nor requires the user to wear any sensor or marker. In brief, the deployment of our system is easy and convenient enough to make it works successfully at anytime, anywhere, with any user.
+
+On the other hand, we will focus on the reconstruction of the rest planes of the bounding box that has been mentioned in Sec.~\ref{sec:Intro}, and we believe that this will definitely help in enlarging the capable range of estimating angles.
+
+
 
 
 % For tables use
